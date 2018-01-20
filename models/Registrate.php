@@ -3,34 +3,62 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Model;
 
 /**
  * This is model for view "registrate"
  * 
- * @property int $id
  * @property string $username
  * @property string $password
- * @property string $auth_key
  */
-class Registrate extends Users
+class Registrate extends Model
 {
+	public $username;
+	public $password;
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['username', 'password'], 'required'],
+			[['username', 'password'], 'string', 'max' => 255, 'min' => 3],
+			[['password'], 'string', 'min' => 6],
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'username' => 'Username',
+			'password' => 'Password',
+		];
+	}
+
 	/**
 	 * Registrate user.
 	 *
-	 * @return bool if user registrates return true
+	 * @return Users|null if user registrates return true
 	 */
 	function signUp()
 	{
 		if ($this->validate()) {
-			$this->password = Yii::$app->security->generatePasswordHash($this->password);
-			$this->auth_key = Yii::$app->security->generateRandomString();
-			if ($this->save(false)) {
-				return true;
+			$user = new Users();
+			$user->username = $this->username;
+			$user->setPassword($this->password);
+			$user->setAuthKey();
+			if ($user->save()) {
+				return $user;
 			} else {
-				return false;
+				$this->addErrors($user->getErrors());
+				return null;
 			}
 		} else {
-			return false;
+			return null;
 		}
 	}
 }

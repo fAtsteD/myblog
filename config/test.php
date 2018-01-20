@@ -12,7 +12,7 @@ return [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],  
-    'language' => 'en-US',
+    'language' => 'ru-RU',
     'components' => [
         'db' => $db,
         'mailer' => [
@@ -25,7 +25,7 @@ return [
             'showScriptName' => true,
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\Users',
         ],        
         'request' => [
             'cookieValidationKey' => 'test',

@@ -135,10 +135,10 @@ class SiteController extends Controller
     {
         $model = new Registrate();
 
-        if ($model->load(Yii::$app->request->post()) && $model->signUp()) {
+        if ($model->load(Yii::$app->request->post()) && $user = $model->signUp()) {
             Yii::$app->session->setFlash('success', 'Регистрация успешна.');
-            Yii::$app->user->login(Users::findIdentity($model->id), 3600 * 24 * 30);
-            return $this->redirect(['index']);
+            Yii::$app->user->login($user, 3600 * 24 * 30);
+            return $this->goHome();
         }
 
         return $this->render('registrate', ['model' => $model]);

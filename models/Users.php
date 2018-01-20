@@ -33,7 +33,6 @@ class Users extends ActiveRecord implements IdentityInterface
             [['username', 'password', 'auth_key'], 'required'],
             [['username', 'password', 'auth_key'], 'string', 'max' => 255],
             [['username'], 'unique'],
-            [['password'], 'min' => 6],
         ];
     }
 
@@ -91,6 +90,23 @@ class Users extends ActiveRecord implements IdentityInterface
     public function getAuthKey()
     {
         return $this->auth_key;
+    }
+
+    /**
+     * Create password by hashing.
+     *
+     * @param string $password
+     * @return void
+     */
+    public function setPassword($password)
+    {
+        $this->password = Yii::$app->security->generatePasswordHash($password);
+    }
+
+
+    public function setAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
     /**

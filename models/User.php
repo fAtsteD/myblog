@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\web\IdentityInterface;
+use yii\base\BaseObject;
 
 
 class User extends BaseObject implements IdentityInterface
