@@ -8,8 +8,10 @@ class LoginFormCest
     public function _fixtures()
     {
         return [
-            'class' => UsersFixture::className(),
-            'dataFile' => codecept_data_dir() . 'users.php',
+            'users' => [
+                'class' => UsersFixture::className(),
+                'dataFile' => codecept_data_dir() . 'users.php',
+            ]
         ];
     }
 
@@ -21,7 +23,6 @@ class LoginFormCest
     public function openLoginPage(\FunctionalTester $I)
     {
         $I->see('Войти', 'h1');
-
     }
 
     // demonstrates `amLoggedInAs` method

@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Войти';
 ?>
@@ -30,11 +31,16 @@ $this->title = 'Войти';
         ]) ?>
 
         <div class="form-group">
-            <div class="text-center">
-                <?= Html::submitButton('Войти', ['class' => 'btn btn-primary col-sm-offset-5 col-sm-2', 'name' => 'login-button']) ?>
+            <div class="col-sm-offset-4 col-sm-4 text-center">
+                <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+
+        <?php ActiveForm::end(); ?>
+        
+                <a class="btn btn-info" href=<?= Url::to('registrate') ?> role="button">Регистрация</a>
+                
             </div>
         </div>
 
-    <?php ActiveForm::end(); ?>
+    
 
 </div>

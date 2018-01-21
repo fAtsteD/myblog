@@ -34,8 +34,8 @@ class Registrate extends Model
 	public function attributeLabels()
 	{
 		return [
-			'username' => 'Username',
-			'password' => 'Password',
+			'username' => 'Логин',
+			'password' => 'Пароль',
 		];
 	}
 

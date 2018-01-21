@@ -18,7 +18,7 @@ $this->title = 'Регистрация';
 			'template' => "{label}\n<div class=\"col-sm-6 col-lg-4\">{input}</div>\n<div class=\"col-sm-3 col-lg-4\">{error}</div>",
 			'labelOptions' => ['class' => 'control-label col-sm-3 col-lg-4'],
 		]
-	]); ?>
+	]);	?>
 
 		<?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
