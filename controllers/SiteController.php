@@ -11,6 +11,10 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Registrate;
 use app\models\Users;
+use yii\helpers\Url;
+use app\models\translationSource;
+use app\models\translationMessageRU;
+use yii\base\Model;
 
 class SiteController extends Controller
 {
@@ -141,6 +145,32 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return $this->render('registrate', ['model' => $model]);
+        return Yii::$app->user->isGuest ? $this->render('registrate', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
+    }
+
+    /**
+     * Display translation page for site.
+     *
+     * @return string
+     */
+    public function actionTranslationSite()
+    {
+        $translatedMessages = \app\models\TranslationMessageRU::find()->indexBy('id')->all();
+        $translationSource = \app\models\TranslationSource::find()->indexBy('id')->all();
+
+        if (Model::loadMultiple($translatedMessages, Yii::$app->request->post()) && Model::validateMultiple($translatedMessages)) {
+            foreach ($translatedMessages as $message) {
+                if ($message['translation'] === '') {
+                    $message['translation'] = null;
+                }
+                $message->save(false);
+            }
+            return $this->redirect('index');
+        }
+
+        return $this->render('translate', [
+            'translatedMessages' => $translatedMessages,
+            'translationSource' => $translationSource
+        ]);
     }
 }
