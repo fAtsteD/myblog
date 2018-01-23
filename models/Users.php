@@ -13,6 +13,7 @@ use yii\web\IdentityInterface;
  * @property string $username
  * @property string $password
  * @property string $auth_key
+ * @property string $token_retrieve_password
  */
 class Users extends ActiveRecord implements IdentityInterface
 {
@@ -31,8 +32,8 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'password', 'auth_key'], 'required'],
-            [['username', 'password', 'auth_key'], 'string', 'max' => 255],
-            [['username'], 'unique'],
+            [['username', 'password', 'auth_key', 'token_retrieve_password'], 'string', 'max' => 255],
+            [['username', 'token_retrieve_password'], 'unique'],
         ];
     }
 
@@ -46,6 +47,7 @@ class Users extends ActiveRecord implements IdentityInterface
             'username' => 'Username',
             'password' => 'Password',
             'auth_key' => 'Auth Key',
+            'token_retrieve_password' => 'Token RetrievePassword'
         ];
     }
 
@@ -62,14 +64,14 @@ class Users extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return static::findOne(['token_retrieve_password' => $token]);
     }
 
     /**
      * Find user by username.
      *
      * @param string $username
-     * @return mixed
+     * @return Users
      */
     public static function findByUsername(string $username)
     {
@@ -103,10 +105,23 @@ class Users extends ActiveRecord implements IdentityInterface
         $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
-
+    /**
+     * Create auth key from random string.
+     *
+     * @return void
+     */
     public function setAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    public function setTokenRetrievePassword()
+    {
+        $this->token_retrieve_password = Yii::$app->security->generateRandomString();
+        while (!$this->validate(['token_retrieve_password'])) {
+            $this->token_retrieve_password = Yii::$app->security->generateRandomString();
+        }
+        $this->save();
     }
 
     /**

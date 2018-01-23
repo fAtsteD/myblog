@@ -47,18 +47,18 @@ AppAsset::register($this);
             [
                 'label' => 'Домой',
                 'url' => Yii::$app->homeUrl,
-                Url::current() !== Url::to('@web/site/index') ? : 'options' => ['class' => 'active']
+                Url::current() !== Url::toRoute('site/index') ? : 'options' => ['class' => 'active']
 
             ],
             [
                 'label' => 'О сайте',
-                'url' => Url::to('@web/site/about'),
-                Url::current() !== Url::to('@web/site/about') ? : 'options' => ['class' => 'active']
+                'url' => Url::toRoute('site/about'),
+                Url::current() !== Url::toRoute('site/about') ? : 'options' => ['class' => 'active']
             ],
             [
                 'label' => 'Обратная связь',
-                'url' => Url::to('@web/site/contact'),
-                Url::current() !== Url::to('@web/site/contact') ? : 'options' => ['class' => 'active']
+                'url' => Url::toRoute('site/contact'),
+                Url::current() !== Url::toRoute('site/contact') ? : 'options' => ['class' => 'active']
             ],
         ],
     ]); ?>
@@ -69,13 +69,13 @@ AppAsset::register($this);
         'items' => [
             [
                 'label' => 'Войти',
-                'url' => Url::to('@web/site/login'),
-                Url::current() !== Url::to('@web/site/login') ? : 'options' => ['class' => 'active']
+                'url' => Url::toRoute('site/login'),
+                Url::current() !== Url::toRoute('site/login') ? : 'options' => ['class' => 'active']
             ],
             [
                 'label' => 'Регистрация',
-                'url' => Url::to('@web/site/registrate'),
-                Url::current() !== Url::to('@web/site/registrate') ? : 'options' => ['class' => 'active']
+                'url' => Url::toRoute('site/registrate'),
+                Url::current() !== Url::toRoute('site/registrate') ? : 'options' => ['class' => 'active']
             ],
         ],
     ]);
@@ -88,7 +88,7 @@ AppAsset::register($this);
                 </a>
                 <?= Dropdown::widget([
                     'items' => [
-                        ['label' => 'Профиль', 'url' => Url::to('@web/site/about')],
+                        ['label' => 'Профиль', 'url' => Url::toRoute('site/about')],
                         '<li>'
                             . Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
                             . (Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])

@@ -35,7 +35,9 @@ class LoginForm extends Model
         ];
     }
 
-
+    /**
+     * @inheritDoc
+     */
     public function attributeLabels()
     {
         return [

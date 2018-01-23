@@ -36,7 +36,7 @@ $this->title = 'Войти';
 
         <?php ActiveForm::end(); ?>
         
-                <a class="btn btn-info" href=<?= Url::to('registrate') ?> role="button">Регистрация</a>
+                <a class="btn btn-info" href=<?= Url::toRoute('site/retrieve-password') ?> role="button">Востановление пароля</a>
                 
             </div>
         </div>

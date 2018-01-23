@@ -11,7 +11,7 @@ use yii\base\Model;
  * @property string $username
  * @property string $password
  */
-class Registrate extends Model
+class RegistrateForm extends Model
 {
 	public $username;
 	public $password;

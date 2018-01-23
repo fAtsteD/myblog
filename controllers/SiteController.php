@@ -15,6 +15,8 @@ use yii\helpers\Url;
 use app\models\translationSource;
 use app\models\translationMessageRU;
 use yii\base\Model;
+use app\models\RegistrateForm;
+use app\models\RetrievePasswordForm;
 
 class SiteController extends Controller
 {
@@ -133,11 +135,11 @@ class SiteController extends Controller
     /**
      * Display form for registration
      *
-     * @return string
+     * @return Response|string
      */
     public function actionRegistrate()
     {
-        $model = new Registrate();
+        $model = new RegistrateForm();
 
         if ($model->load(Yii::$app->request->post()) && $user = $model->signUp()) {
             Yii::$app->session->setFlash('success', 'Регистрация успешна.');
@@ -148,10 +150,42 @@ class SiteController extends Controller
         return Yii::$app->user->isGuest ? $this->render('registrate', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
     }
 
+    public function actionRetrievePassword($token = null)
+    {
+        $model = new RetrievePasswordForm();
+        $model->scenario = RetrievePasswordForm::SCENARIO_FIND_USERNAME;
+
+        if ($token) {
+            $model->scenario = RetrievePasswordForm::SCENARIO_RETRIEVE_PASSWORD;
+            if ($model->load(Yii::$app->request->post()) && $user = $model->retrievePassword($token)) {
+                Yii::$app->user->login($user, 3600 * 24 * 30);
+                return $this->goHome();
+            }
+            return Yii::$app->user->isGuest ? $this->render('retrievePassword', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
+        } elseif ($model->load(Yii::$app->request->post()) && $user = $model->findUser()) {
+            Yii::$app->session->setFlash('warning', 'Для восстановления пароля перейдите по <a href="'
+                . Url::toRoute(['site/retrieve-password', 'token' => $user->token_retrieve_password], true)
+                . '">ссылке</a>.');
+            return $this->goHome();
+        } else {
+            return Yii::$app->user->isGuest ? $this->render('retrievePassword', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
+        }
+    }
+
+    // private function checkUsernameInForm()
+    // {
+    //     $data = Yii::$app->request->post('RetrievePasswordForm', []);
+    //     if (isset($data['username'])) {
+    //         return $data['username'];
+    //     }
+
+    //     return null;
+    // }
+
     /**
      * Display translation page for site.
      *
-     * @return string
+     * @return Response|string
      */
     public function actionTranslationSite()
     {
@@ -165,7 +199,7 @@ class SiteController extends Controller
                 }
                 $message->save(false);
             }
-            return $this->redirect('index');
+            return $this->goHome();
         }
 
         return $this->render('translate', [
