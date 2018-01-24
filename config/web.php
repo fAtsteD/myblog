@@ -48,12 +48,10 @@ $config = [
             'showScriptName' => false,
             'rules' => [],
         ],
-        'i18n' => [
-            'translations' =>[
-                'yii' => [
-                    'class' => 'yii\i18n\DbMessageSource',
-                ],
-            ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // uncomment if you want to cache RBAC items hierarchy
+            // 'cache' => 'cache',
         ],
     ],
     'params' => $params,

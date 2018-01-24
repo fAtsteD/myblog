@@ -30,7 +30,7 @@ class LoginFormCest
     {
         $I->amLoggedInAs(1);
         $I->amOnPage('/');
-        $I->see('Logout (admin-test)');
+        $I->see('admin-test');
     }
 
     // demonstrates `amLoggedInAs` method
@@ -38,15 +38,15 @@ class LoginFormCest
     {
         $I->amLoggedInAs(Users::findByUsername('admin-test'));
         $I->amOnPage('/');
-        $I->see('Logout (admin-test)');
+        $I->see('admin-test');
     }
 
     public function loginWithEmptyCredentials(\FunctionalTester $I)
     {
         $I->submitForm('#login-form', []);
         $I->expectTo('see validations errors');
-        $I->see('Логин cannot be blank.');
-        $I->see('Пароль cannot be blank.');
+        $I->see('Необходимо заполнить «Логин».');
+        $I->see('Необходимо заполнить «Пароль».');
     }
 
     public function loginWithWrongCredentials(\FunctionalTester $I)
@@ -65,7 +65,7 @@ class LoginFormCest
             'LoginForm[username]' => 'admin-test',
             'LoginForm[password]' => 'admin921',
         ]);
-        $I->see('Logout (admin-test)');
+        $I->see('admin-test');
         $I->dontSeeElement('form#login-form');
     }
 }

@@ -28,32 +28,32 @@ class RegistrateFormCest
     public function registrateWithSmallPasswordAndUsername(FunctionalTester $I)
     {
         $I->submitForm('#registrate-form', [
-            'Registrate[username]' => 're',
-            'Registrate[password]' => 'hello',
+            'RegistrateForm[username]' => 're',
+            'RegistrateForm[password]' => 'hello',
         ]);
         $I->expectTo('see validations errors');
-        $I->see('Пароль should contain at least 6 characters.');
-        $I->see('Логин should contain at least 3 characters.');
+        $I->see('Значение «Логин» должно содержать минимум 3 символа.');
+        $I->see('Значение «Пароль» должно содержать минимум 6 символов.');
     }
 
     public function registrateSuccessfully(FunctionalTester $I)
     {
         $I->submitForm('#registrate-form', [
-            'Registrate[username]' => 'registrateUser',
-            'Registrate[password]' => 'hello123456789',
+            'RegistrateForm[username]' => 'registrateUser',
+            'RegistrateForm[password]' => 'hello123456789',
         ]);
-        $I->see('Logout (registrateUser)');
+        $I->see('registrateUser');
         $I->dontSeeElement('form#registrate-form');
     }
 
     public function registrateExistUser(FunctionalTester $I)
     {
         $I->submitForm('#registrate-form', [
-            'Registrate[username]' => 'admin-test',
-            'Registrate[password]' => 'admin921',
+            'RegistrateForm[username]' => 'admin-test',
+            'RegistrateForm[password]' => 'admin921',
         ]);
         $I->expectTo('see validations errors');
-        $I->see('Username "admin-test" has already been taken.');
+        $I->see('Значение «admin-test» для «Логин» уже занято.');
     }
 
 
@@ -61,7 +61,7 @@ class RegistrateFormCest
     {
         $I->submitForm('#registrate-form', []);
         $I->expectTo('see validations errors');
-        $I->see('Логин cannot be blank.');
-        $I->see('Пароль cannot be blank.');
+        $I->see('Необходимо заполнить «Логин».');
+        $I->see('Необходимо заполнить «Пароль».');
     }
 }

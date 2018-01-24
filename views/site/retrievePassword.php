@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Registrate */
+/* @var $model app\models\RetrievePasswordForm */
 
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;

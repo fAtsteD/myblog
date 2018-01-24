@@ -139,6 +139,10 @@ class SiteController extends Controller
      */
     public function actionRegistrate()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new RegistrateForm();
 
         if ($model->load(Yii::$app->request->post()) && $user = $model->signUp()) {
@@ -147,11 +151,22 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return Yii::$app->user->isGuest ? $this->render('registrate', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
+        return $this->render('registrate', ['model' => $model]);
     }
 
+    /**
+     * Retrieve password action. First user type "username",
+     * then he get link with token, where he type new password.
+     *
+     * @param string $token
+     * @return Response|string
+     */
     public function actionRetrievePassword($token = null)
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new RetrievePasswordForm();
         $model->scenario = RetrievePasswordForm::SCENARIO_FIND_USERNAME;
 
@@ -168,43 +183,7 @@ class SiteController extends Controller
                 . '">ссылке</a>.');
             return $this->goHome();
         } else {
-            return Yii::$app->user->isGuest ? $this->render('retrievePassword', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
+            return $this->render('retrievePassword', ['model' => $model]);
         }
-    }
-
-    // private function checkUsernameInForm()
-    // {
-    //     $data = Yii::$app->request->post('RetrievePasswordForm', []);
-    //     if (isset($data['username'])) {
-    //         return $data['username'];
-    //     }
-
-    //     return null;
-    // }
-
-    /**
-     * Display translation page for site.
-     *
-     * @return Response|string
-     */
-    public function actionTranslationSite()
-    {
-        $translatedMessages = \app\models\TranslationMessageRU::find()->indexBy('id')->all();
-        $translationSource = \app\models\TranslationSource::find()->indexBy('id')->all();
-
-        if (Model::loadMultiple($translatedMessages, Yii::$app->request->post()) && Model::validateMultiple($translatedMessages)) {
-            foreach ($translatedMessages as $message) {
-                if ($message['translation'] === '') {
-                    $message['translation'] = null;
-                }
-                $message->save(false);
-            }
-            return $this->goHome();
-        }
-
-        return $this->render('translate', [
-            'translatedMessages' => $translatedMessages,
-            'translationSource' => $translationSource
-        ]);
     }
 }

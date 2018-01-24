@@ -8,6 +8,8 @@ use yii\base\Model;
 /**
  * This model for view "retrievePassword"
  * 
+ * @var const string SCENARIO_FIND_USERNAME constant for scenario, when demand only username from user
+ * @var const string SCENARIO_RETRIEVE_PASSWORD constant for scenario, when demand only password from user
  * @property string $username user, that want to retrieve password
  * @property string $password typing new passwrord by user
  * @property string $repeatePassword typing new password by user again

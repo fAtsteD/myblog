@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+//$test_db = require __DIR__ . '/test_db.php';
 
 $config = [
     'id' => 'basic-console',
@@ -21,15 +22,36 @@ $config = [
             ],
         ],
         'db' => $db,
-    ],
-    'params' => $params,
-    /*
-    'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
+        //'db' => $test_db,
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // uncomment if you want to cache RBAC items hierarchy
+            // 'cache' => 'cache',
         ],
     ],
-    */
+    'params' => $params,
+    'controllerMap' => [
+        // Common migrations for the whole application
+        'migrate-app' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationNamespaces' => ['app\migrations'],
+            'migrationTable' => 'migration_app',
+            'migrationPath' => null,
+        ],
+        // Migrations for the specific project's module
+        'migrate-module' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationNamespaces' => ['module\migrations'],
+            'migrationTable' => 'migration_module',
+            'migrationPath' => null,
+        ],
+        // Migrations for the specific extension
+        'migrate-rbac' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationPath' => '@yii/rbac/migrations',
+            'migrationTable' => 'migration_rbac',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {

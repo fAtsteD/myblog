@@ -44,10 +44,10 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
-            'password' => 'Password',
+            'username' => 'Логин',
+            'password' => 'Пароль',
             'auth_key' => 'Auth Key',
-            'token_retrieve_password' => 'Token RetrievePassword'
+            'token_retrieve_password' => 'Token Retrieve Password'
         ];
     }
 
@@ -115,6 +115,12 @@ class Users extends ActiveRecord implements IdentityInterface
         $this->auth_key = Yii::$app->security->generateRandomString();
     }
 
+    /**
+     * Set token in DB only for user, that want retrieve password.
+     * Token have to be unique for all users.
+     *
+     * @return void
+     */
     public function setTokenRetrievePassword()
     {
         $this->token_retrieve_password = Yii::$app->security->generateRandomString();
