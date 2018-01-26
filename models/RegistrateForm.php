@@ -15,6 +15,7 @@ class RegistrateForm extends Model
 {
 	public $username;
 	public $password;
+	public $repeatePassword;
 
 	/**
 	 * @inheritdoc
@@ -22,9 +23,10 @@ class RegistrateForm extends Model
 	public function rules()
 	{
 		return [
-			[['username', 'password'], 'required'],
-			[['username', 'password'], 'string', 'max' => 255, 'min' => 3],
-			[['password'], 'string', 'min' => 6],
+			[['username', 'password', 'repeatePassword'], 'required'],
+			[['username'], 'string', 'max' => 255, 'min' => 3],
+			[['password', 'repeatePassword'], 'string', 'max' => 255, 'min' => 6],
+			[['repeatePassword'], 'validatePassword'],
 		];
 	}
 
@@ -36,7 +38,23 @@ class RegistrateForm extends Model
 		return [
 			'username' => 'Логин',
 			'password' => 'Пароль',
+			'repeatePassword' => 'Повторите пароль',
 		];
+	}
+
+	/**
+	 * Validates the passwords.
+	 * This method serves as the inline validation for passwords.
+	 *
+	 * @param string $attribute the attribute currently being validated
+	 * @param array $params the additional name-value pairs given in the rule
+	 * @return void
+	 */
+	public function validatePassword($attribute, $params)
+	{
+		if ($this->password !== $this->repeatePassword) {
+			$this->addError($attribute, 'Пароль не совпадает.');
+		}
 	}
 
 	/**

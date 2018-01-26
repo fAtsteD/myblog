@@ -113,3 +113,16 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.profile {
+    margin-top: 5%;
+}
+
+.profile > div.key {
+    text-align: right;
+    font-weight: bold;
+}
+
+.profile > div.value {
+    text-align: left;
+}

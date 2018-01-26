@@ -31,7 +31,7 @@ $this->title = 'Войти';
         ]) ?>
 
         <div class="form-group">
-            <div class="col-sm-offset-4 col-sm-4 text-center">
+            <div class="col-sm-offset-3 col-sm-6 text-center">
                 <?= Html::submitButton('Войти', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
 
         <?php ActiveForm::end(); ?>
@@ -40,7 +40,5 @@ $this->title = 'Войти';
                 
             </div>
         </div>
-
-    
 
 </div>

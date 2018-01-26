@@ -88,7 +88,7 @@ AppAsset::register($this);
                 </a>
                 <?= Dropdown::widget([
                     'items' => [
-                        ['label' => 'Профиль', 'url' => Url::toRoute('site/about')],
+                        ['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id'=>Yii::$app->user->getId()])],
                         '<li>'
                             . Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
                             . (Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])

@@ -17,6 +17,8 @@ use app\models\translationMessageRU;
 use yii\base\Model;
 use app\models\RegistrateForm;
 use app\models\RetrievePasswordForm;
+use app\models\ViewAndUpdateForm;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
 {
@@ -41,6 +43,7 @@ class SiteController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
+                    'delete-user' => ['post'],
                 ],
             ],
         ];
@@ -151,7 +154,9 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        return $this->render('registrate', ['model' => $model]);
+        return $this->render('registrate', [
+            'model' => $model
+        ]);
     }
 
     /**
@@ -176,14 +181,48 @@ class SiteController extends Controller
                 Yii::$app->user->login($user, 3600 * 24 * 30);
                 return $this->goHome();
             }
-            return Yii::$app->user->isGuest ? $this->render('retrievePassword', ['model' => $model]) : $this->redirect(Yii::$app->homeUrl);
+            return $this->render('retrievePassword', [
+                'model' => $model
+            ]);
         } elseif ($model->load(Yii::$app->request->post()) && $user = $model->findUser()) {
             Yii::$app->session->setFlash('warning', 'Для восстановления пароля перейдите по <a href="'
                 . Url::toRoute(['site/retrieve-password', 'token' => $user->token_retrieve_password], true)
                 . '">ссылке</a>.');
             return $this->goHome();
         } else {
-            return $this->render('retrievePassword', ['model' => $model]);
+            return $this->render('retrievePassword', [
+                'model' => $model
+            ]);
         }
+    }
+
+    /**
+     * Watching profile and edit, if you have permission.
+     *
+     * @param int $id
+     * @return Response|string
+     */
+    public function actionProfile($id)
+    {
+        $model = new ViewAndUpdateForm();
+        if (!$model->getInfo($id)) {
+            throw new NotFoundHttpException('Такого пользователя не существует.');
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $user = $model->changeData($id)) {
+            return $this->refresh();
+        }
+
+        return $this->render('profile', [
+            'model' => $model
+        ]);
+    }
+
+    public function actionDeleteUser()
+    {
+        $user = Yii::$app->user->identity;
+        Yii::$app->user->logout();
+        $user->delete();
+        return $this->goHome();
     }
 }

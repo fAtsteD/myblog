@@ -23,6 +23,8 @@ $this->title = 'Регистрация';
 		<?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
 		<?= $form->field($model, 'password')->passwordInput() ?>
+		
+		<?= $form->field($model, 'repeatePassword')->passwordInput() ?>
 
 		<div class="form-group">
 			<div class="text-center">

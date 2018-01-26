@@ -29,9 +29,9 @@ class RetrievePasswordForm extends Model
 	function rules()
 	{
 		return [
-			[['password', 'repeatePassword'], 'string', 'max' => 255, 'min' => 6],
-			[['username'], 'string', 'min' => 3, 'max' => 255],
-			[['repeatePassword'], 'validatePassword'],
+			[['password', 'repeatePassword'], 'string', 'length' => [6, 255]],
+			[['username'], 'string', 'length' => [3, 255]],
+			[['repeatePassword'], 'compare', 'compareAttribute' => 'repeatePassword'],
 			[['username'], 'required', 'on' => self::SCENARIO_FIND_USERNAME],
 			[['password', 'repeatePassword'], 'required', 'on' => self::SCENARIO_RETRIEVE_PASSWORD],
 		];
@@ -58,21 +58,6 @@ class RetrievePasswordForm extends Model
 			self::SCENARIO_FIND_USERNAME => ['username'],
 			self::SCENARIO_RETRIEVE_PASSWORD => ['password', 'repeatePassword'],
 		];
-	}
-
-	/**
-	 * Validates the passwords.
-	 * This method serves as the inline validation for passwords.
-	 *
-	 * @param string $attribute the attribute currently being validated
-	 * @param array $params the additional name-value pairs given in the rule
-	 * @return void
-	 */
-	public function validatePassword($attribute, $params)
-	{
-		if ($this->password !== $this->repeatePassword) {
-			$this->addError($attribute, 'Пароль не совпадает.');
-		}
 	}
 
 	/**
