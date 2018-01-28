@@ -3,6 +3,7 @@
 use yii\bootstrap\Html;
 use yii\widgets\DetailView;
 use yii\bootstrap\ActiveForm;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ViewAndUpdateForm */
@@ -35,15 +36,27 @@ $this->title = 'Профиль';
 				<div class="col-sm-offset-3 col-sm-6 text-center">
 					<?= Html::submitInput('Изменить', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
 
-		<?php ActiveForm::end(); ?>
-					 
-					<?= Html::a('Удалить аккаунт', ['delete-user'], [
-						'class' => 'btn btn-danger',
-						'data' => [
-							'confirm' => 'Вы уверены что хотите удалить свой аккаунт?',
-							'method' => 'post',
+		<?php ActiveForm::end();?>
+
+					<?php Modal::begin([
+						'header' => '<h4>Удаление аккаунта</h4>',
+						'headerOptions' => [
+							'class' => 'text-left',
 						],
-					]) ?>
+						'toggleButton' => [
+							'label' => 'Удалить аккаунт',
+							'class' => 'btn btn-danger',
+						],
+					]);?>
+						<p class="text-left">Вы уверены что хотите удалить аккаунт?</p>
+						<?= Html::beginForm(['/site/delete-user'], 'post', ['id' => 'delete-user']);?>
+						<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+						<?= Html::submitInput('Подтвердить', ['class' => 'btn btn-primary', 'name' => 'delete-accept-button']); ?>
+						</div>
+						<?= Html::endForm(); ?>
+						
+					<?php Modal::end(); ?>
 				</div>
 			</div>
 <?php else : ?>

@@ -91,8 +91,8 @@ AppAsset::register($this);
                         ['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id'=>Yii::$app->user->getId()])],
                         '<li>'
                             . Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
-                            . (Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])
-                            . Html::endForm())
+                            . Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])
+                            . Html::endForm()
                             . '</li>',
                     ]
                 ]) ?>

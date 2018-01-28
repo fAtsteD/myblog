@@ -12,9 +12,6 @@ use app\models\ContactForm;
 use app\models\Registrate;
 use app\models\Users;
 use yii\helpers\Url;
-use app\models\translationSource;
-use app\models\translationMessageRU;
-use yii\base\Model;
 use app\models\RegistrateForm;
 use app\models\RetrievePasswordForm;
 use app\models\ViewAndUpdateForm;
@@ -218,6 +215,11 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Delete user from users.
+     *
+     * @return Response
+     */
     public function actionDeleteUser()
     {
         $user = Yii::$app->user->identity;
