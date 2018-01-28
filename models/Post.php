@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "post".
@@ -20,7 +21,7 @@ use Yii;
  * @property PostTagForPost[] $postTagForPosts
  * @property TagForPost[] $tagForPosts
  */
-class Post extends \yii\db\ActiveRecord
+class Post extends ActiveRecord
 {
     /**
      * @inheritdoc

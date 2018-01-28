@@ -16,6 +16,7 @@ use app\models\RegistrateForm;
 use app\models\RetrievePasswordForm;
 use app\models\ViewAndUpdateForm;
 use yii\web\NotFoundHttpException;
+use app\models\EditPostForm;
 
 class SiteController extends Controller
 {
@@ -225,6 +226,30 @@ class SiteController extends Controller
         $user = Yii::$app->user->identity;
         Yii::$app->user->logout();
         $user->delete();
+
         return $this->goHome();
+    }
+
+    /**
+     * Creating post.
+     *
+     * @return Response|string
+     */
+    public function actionCreatePost()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->goBack();
+        }
+
+        $model = new EditPostForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->createPost())
+        {
+            return $this->goHome();
+        }
+
+        return $this->render('createPost', [
+            'model' => $model,
+        ]);
     }
 }
