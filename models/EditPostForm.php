@@ -12,14 +12,14 @@ use yii\base\Model;
  * @property string $title
  * @property string $article
  * @property string $tags
- * @property string $category
+ * @property int $categoryId
  */
 class EditPostForm extends Model
 {
 	public $title;
 	public $article;
 	public $tags;
-	public $category;
+	public $categoryId;
 
 	/**
 	 * @inheritDoc
@@ -27,10 +27,10 @@ class EditPostForm extends Model
 	public function rules()
 	{
 		return [
-			[['title', 'article', 'category'], 'required'],
+			[['title', 'article', 'categoryId'], 'required'],
 			[['article'], 'string'],
 			[['title'], 'string', 'max' => 255],
-			[['category'], 'string', 'max' => 255],
+			[['categoryId'], 'integer'],
 			[['tags'], 'string', 'max' => 255],
 		];
 	}
@@ -44,7 +44,7 @@ class EditPostForm extends Model
 			'title' => 'Заголовок',
 			'article' => 'Статья',
 			'tags' => 'Теги',
-			'category' => 'Категория',
+			'categoryId' => 'Категория',
 		];
 	}
 
@@ -55,11 +55,7 @@ class EditPostForm extends Model
 	 */
 	public function createPost()
 	{
-		if (Yii::$app->user->isGuest) {
-			return false;
-		}
-
-		if (!$postId = $this->savePostTable()) {
+		if (!$postId = $this->savePostTable(false)) {
 			return false;
 		}
 
@@ -73,25 +69,25 @@ class EditPostForm extends Model
 	/**
 	 * Create model for post and finding or creating category.
 	 *
+	 * @param int|bool $postId id of post, if it does not exist - false
 	 * @return int id of post
 	 */
-	private function savePostTable()
+	private function savePostTable($postId)
 	{
-		$post = new Post();
+		if ($postId) {
+			$post = Post::findOne($postId);
+		} else {
+			$post = new Post();
+		}
 
 		$post->body = $this->article;
 		$post->title = $this->title;
 		$post->created_at = date('Y-m-d H:i:s');
 		$post->author_id = Yii::$app->user->getId();
 
-		if (!$categoryDB = Category::findOne(['categ' => $this->category])) {
-			$categoryDB = new Category();
-			$categoryDB->categ = $this->category;
-
-			if (!$categoryDB->save()) {
-				$this->addErrors($categoryDB->getErrors());
-				return false;
-			}
+		if (!$categoryDB = Category::findOne($this->categoryId)) {
+			$this->addError('categoryId', 'Такой категории не существует.');
+			return false;
 		}
 		$post->category_id = $categoryDB->id;
 
@@ -131,6 +127,50 @@ class EditPostForm extends Model
 			if (!$junctionPostAndTag->save()) {
 				return false;
 			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Find post by id and initialize this class's properties.
+	 *
+	 * @param int $postId id of post
+	 * @return bool
+	 */
+	public function findPost($postId)
+	{
+		if (!$post = Post::findOne($postId)) {
+			return false;
+		}
+
+		$this->title = $post->title;
+		$this->article = $post->body;
+		$this->categoryId = $post->category_id;
+
+		foreach ($post->tagForPosts as $value) {
+			$this->tags .= $value->tag . ',';
+		}
+		$this->tags = substr($this->tags, 0, -1);
+
+		return true;
+	}
+
+	/**
+	 * Update data of post.
+	 *
+	 * @param int $postId id of post
+	 * @return bool
+	 */
+	public function updatePost($postId)
+	{
+		if (!$this->savePostTable($postId)) {
+			return false;
+		}
+
+		PostTagForPost::deleteAll(['post_id' => $postId]);
+		if (!$this->saveTagsTable($postId)) {
+			return false;
 		}
 
 		return true;
