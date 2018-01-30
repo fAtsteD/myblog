@@ -14,6 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $title
  * @property string $body
  * @property string $created_at
+ * @property string $show
  *
  * @property CommentForPost[] $commentForPosts
  * @property Users $author
@@ -42,6 +43,8 @@ class Post extends ActiveRecord
             [['body'], 'string'],
             [['created_at'], 'safe'],
             [['title'], 'string', 'max' => 255],
+            [['show'], 'string', 'max' => 1],
+            [['show'], 'in', 'range' => ['f', 't']],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['author_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];
@@ -59,6 +62,7 @@ class Post extends ActiveRecord
             'title' => 'Title',
             'body' => 'Body',
             'created_at' => 'Created At',
+            'show' => 'Show',
         ];
     }
 

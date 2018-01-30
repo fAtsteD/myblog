@@ -41,27 +41,7 @@ AppAsset::register($this);
             'class' => 'navbar-default navbar-fixed-top',
         ],
     ]);
-    echo Nav::widget([
-        'options' => ['class' => 'nav navbar-nav nav-tabs'],
-        'items' => [
-            [
-                'label' => 'Домой',
-                'url' => Yii::$app->homeUrl,
-                Url::current() !== Url::toRoute('site/index') ? : 'options' => ['class' => 'active']
-
-            ],
-            [
-                'label' => 'О сайте',
-                'url' => Url::toRoute('site/about'),
-                Url::current() !== Url::toRoute('site/about') ? : 'options' => ['class' => 'active']
-            ],
-            [
-                'label' => 'Обратная связь',
-                'url' => Url::toRoute('site/contact'),
-                Url::current() !== Url::toRoute('site/contact') ? : 'options' => ['class' => 'active']
-            ],
-        ],
-    ]); ?>
+?>
 
     <?php if (Yii::$app->user->isGuest) :
         echo Nav::widget([
@@ -88,6 +68,7 @@ AppAsset::register($this);
                 </a>
                 <?= Dropdown::widget([
                     'items' => [
+                        ['label' => 'Создать статью', 'url' => Url::toRoute('article/create-post')],
                         ['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id'=>Yii::$app->user->getId()])],
                         '<li>'
                             . Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])

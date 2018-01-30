@@ -13,6 +13,7 @@ use yii\base\Model;
  * @property string $article
  * @property string $tags
  * @property int $categoryId
+ * @property bool $show
  */
 class EditPostForm extends Model
 {
@@ -20,6 +21,7 @@ class EditPostForm extends Model
 	public $article;
 	public $tags;
 	public $categoryId;
+	public $show;
 
 	/**
 	 * @inheritDoc
@@ -32,6 +34,7 @@ class EditPostForm extends Model
 			[['title'], 'string', 'max' => 255],
 			[['categoryId'], 'integer'],
 			[['tags'], 'string', 'max' => 255],
+			[['show'], 'boolean'],
 		];
 	}
 
@@ -45,6 +48,7 @@ class EditPostForm extends Model
 			'article' => 'Статья',
 			'tags' => 'Теги',
 			'categoryId' => 'Категория',
+			'show' => 'Показывать',
 		];
 	}
 
@@ -84,6 +88,7 @@ class EditPostForm extends Model
 		$post->title = $this->title;
 		$post->created_at = date('Y-m-d H:i:s');
 		$post->author_id = Yii::$app->user->getId();
+		$post->show = ($this->show) ? 't' : 'f';
 
 		if (!$categoryDB = Category::findOne($this->categoryId)) {
 			$this->addError('categoryId', 'Такой категории не существует.');
@@ -147,6 +152,8 @@ class EditPostForm extends Model
 		$this->title = $post->title;
 		$this->article = $post->body;
 		$this->categoryId = $post->category_id;
+
+		$this->show = ($post->show === 't') ? true : false ;
 
 		foreach ($post->tagForPosts as $value) {
 			$this->tags .= $value->tag . ',';

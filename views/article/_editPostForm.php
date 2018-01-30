@@ -37,6 +37,7 @@ $form = ActiveForm::begin([
 		'placeholder' => 'кошка,енот,собака',
 	]
 ])->textInput()->hint('Теги вводятся через запятую, без пробела.'); ?>
+<?= $form->field($model, 'show')->checkbox()->label('Публиковать'); ?>
 
 <div class="form-group">
 	<div class="text-center">

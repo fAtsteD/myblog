@@ -56,6 +56,7 @@ $config = [
     ],
     'params' => $params,
     'language' => 'ru-RU',
+    'defaultRoute' => 'article/index',
 ];
 
 if (YII_ENV_DEV) {

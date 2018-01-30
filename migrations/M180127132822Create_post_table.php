@@ -24,7 +24,8 @@ class M180127132822Create_post_table extends Migration
             'category_id' => $this->integer()->defaultValue(1),
             'title' => $this->string()->notNull(),
             'body' => $this->text()->notNull(),
-            'created_at'=>$this->dateTime()->notNull(),
+            'created_at' => $this->dateTime()->notNull(),
+            'show' => $this->string(1)->notNull()->defaultValue('t'),
         ]);
 
         // creates index for column `author_id`

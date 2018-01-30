@@ -16,8 +16,6 @@ use app\models\Users;
 use app\models\RegistrateForm;
 use app\models\RetrievePasswordForm;
 use app\models\ViewAndUpdateForm;
-use app\models\EditPostForm;
-use app\models\Post;
 
 class SiteController extends Controller
 {
@@ -65,16 +63,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    /**
      * Login action.
      *
      * @return Response|string
@@ -104,34 +92,6 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 
     /**
@@ -229,65 +189,5 @@ class SiteController extends Controller
         $user->delete();
 
         return $this->goHome();
-    }
-
-    /**
-     * Creating post.
-     *
-     * @return Response|string
-     */
-    public function actionCreatePost()
-    {
-        if (Yii::$app->user->isGuest) {
-            return $this->goBack();
-        }
-
-        $model = new EditPostForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->createPost()) {
-            return $this->goHome();
-        }
-
-        return $this->render('createPost', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Udating informotion of post.
-     *
-     * @param int $id
-     * @return Response|string
-     */
-    public function actionEditPost($id)
-    {
-        if (Yii::$app->user->isGuest) {
-            return $this->goBack();
-        }
-
-        $model = new EditPostForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->updatePost($id)) {
-            return $this->goHome();
-        }
-
-        if (!$model->findPost($id)) {
-            throw new NotFoundHttpException('Такой статьи не существует.');
-        }
-
-        return $this->render('editPost', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionPost($id)
-    {
-        if (!$model = Post::findOne($id)) {
-            throw new NotFoundHttpException('Такой статьи не существует.');
-        }
-
-        return $this->render('postView', [
-            'model' => $model,
-        ]);
     }
 }
