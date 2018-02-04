@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use app\assets\AppAsset;
 use yii\helpers\Url;
 use yii\bootstrap\Dropdown;
+use yii\bootstrap\Modal;
 
 AppAsset::register($this);
 ?>
@@ -47,16 +48,26 @@ AppAsset::register($this);
         echo Nav::widget([
         'options' => ['class' => 'nav navbar-nav nav-tabs navbar-right'],
         'items' => [
-            [
-                'label' => 'Войти',
-                'url' => Url::toRoute('site/login'),
-                Url::current() !== Url::toRoute('site/login') ? : 'options' => ['class' => 'active']
-            ],
-            [
-                'label' => 'Регистрация',
-                'url' => Url::toRoute('site/registrate'),
-                Url::current() !== Url::toRoute('site/registrate') ? : 'options' => ['class' => 'active']
-            ],
+            '<li>'
+                . Html::a(
+                'Войти',
+                '#login-modal',
+                [
+                    'class' => 'toggleButtonForModalWithAJAX',
+                    'data-toggle' => 'modal'
+                ]
+            )
+                . '</li>',
+            '<li>'
+                . Html::a(
+                'Регистрация',
+                '#registrate-modal',
+                [
+                    'class' => 'toggleButtonForModalWithAJAX',
+                    'data-toggle' => 'modal'
+                ]
+            )
+                . '</li>',
         ],
     ]);
     else : ?>
@@ -98,6 +109,28 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
+
+<?php
+Modal::begin([
+    'id' => 'login-modal',
+    'header' => '<h2>Войти</h2>',
+]);
+echo '<div id="login-modal-data" data-link-for-ajax="'
+    . Url::toRoute('site/login', true)
+    . '"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div>';
+Modal::end();
+?>
+
+<?php
+Modal::begin([
+    'id' => 'registrate-modal',
+    'header' => '<h2>Регистрация</h2>',
+]);
+echo '<div id="registrate-modal-data" data-link-for-ajax="'
+    . Url::toRoute('site/registrate', true)
+    . '"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div>';
+Modal::end();
+?>
 
 <?php $this->endBody() ?>
 </body>

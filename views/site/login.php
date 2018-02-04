@@ -7,12 +7,10 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
+use yii\bootstrap\Modal;
 
-$this->title = 'Войти';
 ?>
 <div class="site-login">
-    <h1 class="text-center"><?= Html::encode($this->title) ?></h1>
-
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
         'layout' => 'horizontal',
@@ -20,6 +18,9 @@ $this->title = 'Войти';
             'template' => "{label}\n<div class=\"col-sm-6 col-lg-4\">{input}</div>\n<div class=\"col-sm-3 col-lg-4\">{error}</div>",
             'labelOptions' => ['class' => 'control-label col-sm-3 col-lg-4'],
         ],
+        'options' => [
+            'data-pjax' => true,
+        ]
     ]); ?>
 
         <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>

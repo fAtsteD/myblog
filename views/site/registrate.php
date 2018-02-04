@@ -6,10 +6,8 @@
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Регистрация';
 ?>
 <div class="site-registrate">
-	<h1 class="text-center"><?= Html::encode($this->title) ?></h1>
 
 	<?php $form = ActiveForm::begin([
 		'id' => 'registrate-form',

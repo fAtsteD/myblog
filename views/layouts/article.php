@@ -13,10 +13,14 @@ use yii\bootstrap\Dropdown;
 use app\models\Category;
 use yii\widgets\ListView;
 use yii\data\ActiveDataProvider;
+use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
+use yii\bootstrap\Button;
 
 AppAsset::register($this);
 $dataProviderCategory = new ActiveDataProvider([
 	'query' => Category::find(),
+	'pagination' => false,
 ]);
 ?>
 <?php $this->beginPage() ?>
@@ -48,23 +52,39 @@ $dataProviderCategory = new ActiveDataProvider([
 				],
 			]); ?>
 
-    <?php if (Yii::$app->user->isGuest) :
-				echo Nav::widget([
-				'options' => ['class' => 'nav navbar-nav nav-tabs navbar-right'],
-				'items' => [
-					[
-						'label' => 'Войти',
-						'url' => Url::toRoute('site/login'),
-						Url::current() !== Url::toRoute('site/login') ? : 'options' => ['class' => 'active']
-					],
-					[
-						'label' => 'Регистрация',
-						'url' => Url::toRoute('site/registrate'),
-						Url::current() !== Url::toRoute('site/registrate') ? : 'options' => ['class' => 'active']
-					],
-				],
-			]);
-			else : ?>
+	<?php if (Yii::$app->user->isGuest) :
+	Pjax::begin([
+	'linkSelector' => false,
+]);
+echo Nav::widget(
+	[
+		'options' => ['class' => 'nav navbar-nav nav-tabs navbar-right'],
+		'items' => [
+			'<li>'
+				. Html::a(
+				'Войти',
+				'#login-modal',
+				[
+					'class' => 'toggleButtonForModalWithAJAX',
+					'data-toggle' => 'modal'
+				]
+			)
+				. '</li>',
+			'<li>'
+				. Html::a(
+				'Регистрация',
+				'#registrate-modal',
+				[
+					'class' => 'toggleButtonForModalWithAJAX',
+					'data-toggle' => 'modal'
+				]
+			)
+				. '</li>',
+		],
+	]
+);
+Pjax::end();
+else : ?>
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
@@ -72,16 +92,16 @@ $dataProviderCategory = new ActiveDataProvider([
                 <span class="caret"></span>
                 </a>
                 <?= Dropdown::widget([
-					'items' => [
-						['label' => 'Создать статью', 'url' => Url::toRoute('article/create-post')],
-						['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id' => Yii::$app->user->getId()])],
-						'<li>'
-							. Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
-							. Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])
-							. Html::endForm()
-							. '</li>',
-					]
-				]) ?>
+																'items' => [
+																	['label' => 'Создать статью', 'url' => Url::toRoute('article/create-post')],
+																	['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id' => Yii::$app->user->getId()])],
+																	'<li>'
+																		. Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
+																		. Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])
+																		. Html::endForm()
+																		. '</li>',
+																]
+															]) ?>
             </li>
         </ul>
     <?php endif; ?>
@@ -98,10 +118,10 @@ $dataProviderCategory = new ActiveDataProvider([
 		<div class="sidebar-layout col-md-3">
 			<h4>Категории</h4>
 			<?= ListView::widget([
-				'dataProvider' => $dataProviderCategory,
-				'itemView' => '_category',
-				'layout' => "{items}",
-			])
+			'dataProvider' => $dataProviderCategory,
+			'itemView' => '_category',
+			'layout' => "{items}\n{pager}",
+		])
 		?>
 		</div>
 	</div>
@@ -114,6 +134,28 @@ $dataProviderCategory = new ActiveDataProvider([
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
+
+<?php
+Modal::begin([
+	'id' => 'login-modal',
+	'header' => '<h2>Войти</h2>',
+]);
+echo '<div id="login-modal-data" data-link-for-ajax="'
+	. Url::toRoute('site/login', true)
+	. '"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div>';
+Modal::end();
+?>
+
+<?php
+Modal::begin([
+	'id' => 'registrate-modal',
+	'header' => '<h2>Регистрация</h2>',
+]);
+echo '<div id="registrate-modal-data" data-link-for-ajax="'
+	. Url::toRoute('site/registrate', true)
+	. '"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div>';
+Modal::end();
+?>
 
 <?php $this->endBody() ?>
 </body>

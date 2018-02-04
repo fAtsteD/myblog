@@ -6,6 +6,7 @@ use yii\widgets\ListView;
 use yii\data\ActiveDataProvider;
 use app\models\Post;
 use yii\helpers\Inflector;
+use yii\widgets\Pjax;
 
 $this->title = 'Блог Андрея';
 $dataProvider = new ActiveDataProvider([
@@ -20,9 +21,11 @@ $dataProvider = new ActiveDataProvider([
     ],
 ]);?>
 <div class="default-index">
+<?php Pjax::begin(); ?>
 <?= ListView::widget([
     'dataProvider' => $dataProvider,
     'itemView' => '_post',
     'layout' => "{items}\n{pager}",
 ]);?>
+<?php Pjax::end(); ?>
 </div>
