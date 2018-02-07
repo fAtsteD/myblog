@@ -8,6 +8,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\helpers\Url;
 use app\models\LoginForm;
 use app\models\ContactForm;
@@ -27,13 +28,25 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => [
+                    'logout',
+                    'delete-user',
+                ],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['registrateUser'],
                     ],
+                    [
+                        'actions' => ['delete-user'],
+                        'allow' => true,
+                        'roles' => ['deleteUser'],
+                        'roleParams' => [
+                            'userId' => Users::findOne(['id' => Yii::$app->user->getId()]),
+                        ]
+                    ],
+
                 ],
             ],
             'verbs' => [
@@ -73,16 +86,19 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            return $this->refresh();
+        }
+
         if (Yii::$app->request->isAjax) {
-            $model = new LoginForm();
-            if ($model->load(Yii::$app->request->post()) && $model->login()) {
-                return $this->refresh();
-            }
             return $this->renderAjax('login', [
                 'model' => $model,
             ]);
         } else {
-            throw new NotFoundHttpException('Такой страницы не существует.');;
+            return $this->render('login', [
+                'model' => $model,
+            ]);
         }
     }
 
@@ -109,20 +125,22 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        $model = new RegistrateForm();
+
+        if ($model->load(Yii::$app->request->post()) && $user = $model->signUp()) {
+            Yii::$app->session->setFlash('success', 'Регистрация успешна.');
+            Yii::$app->user->login($user, 3600 * 24 * 30);
+            return $this->refresh();
+        }
+
         if (Yii::$app->request->isAjax) {
-            $model = new RegistrateForm();
-
-            if ($model->load(Yii::$app->request->post()) && $user = $model->signUp()) {
-                Yii::$app->session->setFlash('success', 'Регистрация успешна.');
-                Yii::$app->user->login($user, 3600 * 24 * 30);
-                return $this->refresh();
-            }
-
             return $this->renderAjax('registrate', [
                 'model' => $model
             ]);
         } else {
-            throw new NotFoundHttpException('Такой страницы не существует.');;
+            return $this->render('registrate', [
+                'model' => $model
+            ]);
         }
     }
 

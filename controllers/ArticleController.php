@@ -11,11 +11,53 @@ use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
 use app\models\EditPostForm;
 use app\models\Post;
+use app\models\Users;
 
 
 class ArticleController extends Controller
 {
     public $layout = 'article';
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => [
+                    'create-post',
+                    'edit-post',
+                    'delete-user',
+                ],
+                'rules' => [
+                    [
+                        'actions' => ['create-post'],
+                        'allow' => true,
+                        'roles' => ['createPost'],
+                    ],
+                    [
+                        'actions' => ['edit-post'],
+                        'allow' => true,
+                        'roles' => ['updatePost'],
+                        'roleParams' => [
+                            'userId' => Post::findOne(Yii::$app->request->get('id')),
+                        ]
+                    ],
+                    [
+                        'actions' => ['delete-user'],
+                        'allow' => true,
+                        'roles' => ['deleteUser'],
+                        'roleParams' => [
+                            'userId' => Users::findOne(Yii::$app->request->get('id')),
+                        ]
+                    ],
+
+                ],
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc

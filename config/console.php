@@ -38,17 +38,10 @@ $config = [
             'migrationTable' => 'migration_app',
             'migrationPath' => null,
         ],
-        // Migrations for the specific project's module
-        'migrate-module' => [
-            'class' => 'yii\console\controllers\MigrateController',
-            'migrationNamespaces' => ['module\migrations'],
-            'migrationTable' => 'migration_module',
-            'migrationPath' => null,
-        ],
-        // Migrations for the specific extension
+        // Migrations for the RBAC extension
         'migrate-rbac' => [
             'class' => 'yii\console\controllers\MigrateController',
-            'migrationPath' => '@yii/rbac/migrations',
+            'migrationPath' => ['rbac\migrations', '@yii/rbac/migrations'],
             'migrationTable' => 'migration_rbac',
         ],
     ],

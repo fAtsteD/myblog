@@ -70,6 +70,9 @@ class RegistrateForm extends Model
 			$user->setPassword($this->password);
 			$user->setAuthKey();
 			if ($user->save()) {
+				$auth = Yii::$app->authManager;
+				$auth->assign($auth->getRole('registrateUser'), $user->getId());
+
 				return $user;
 			} else {
 				$this->addErrors($user->getErrors());
