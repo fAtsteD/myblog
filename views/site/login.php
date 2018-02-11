@@ -9,6 +9,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 
+$this->title = 'Войти';
 ?>
 <div class="site-login">
     <?php $form = ActiveForm::begin([

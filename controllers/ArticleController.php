@@ -29,7 +29,6 @@ class ArticleController extends Controller
                 'only' => [
                     'create-post',
                     'edit-post',
-                    'delete-user',
                 ],
                 'rules' => [
                     [
@@ -42,15 +41,7 @@ class ArticleController extends Controller
                         'allow' => true,
                         'roles' => ['updatePost'],
                         'roleParams' => [
-                            'userId' => Post::findOne(Yii::$app->request->get('id')),
-                        ]
-                    ],
-                    [
-                        'actions' => ['delete-user'],
-                        'allow' => true,
-                        'roles' => ['deleteUser'],
-                        'roleParams' => [
-                            'userId' => Users::findOne(Yii::$app->request->get('id')),
+                            'post' => Post::findOne(Yii::$app->request->get('id')),
                         ]
                     ],
 

@@ -9,14 +9,14 @@ use yii\base\Model;
  * View information about user by id.
  * Update information if you have permission.
  * 
- * @property bool $edit if user can edit data value is "true"
+ * @property int $userId
  * @property string $username
  * @property string $password
  * @property string $repeatPassword
  */
 class ViewAndUpdateForm extends Model
 {
-	public $edit;
+	public $userId;
 	public $username;
 	public $password;
 	public $repeatePassword;
@@ -59,10 +59,7 @@ class ViewAndUpdateForm extends Model
 		}
 
 		$this->username = $user->username;
-
-		if (Yii::$app->user->getId() === $user->getId()) {
-			$this->edit = true;
-		}
+		$this->userId = $user->getId();
 
 		return true;
 	}
@@ -80,11 +77,15 @@ class ViewAndUpdateForm extends Model
 		}
 
 		if ($this->validate() && $user->getId() === Yii::$app->user->getId()) {
-			$user->username = $this->username ? $this->username : $user->username;
+			if ($this->username) {
+				$user->username = $this->username;
+			}
+
 			if ($this->password) {
 				$user->setPassword($this->password);
 			}
-			if ($user->save()) {
+
+			if ($user->validate() && $user->save(false)) {
 				return $user;
 			} else {
 				$this->addErrors($user->getErrors());

@@ -82,12 +82,12 @@ class EditPostForm extends Model
 			$post = Post::findOne($postId);
 		} else {
 			$post = new Post();
+			$post->author_id = Yii::$app->user->getId();
 		}
 
 		$post->body = $this->article;
 		$post->title = $this->title;
 		$post->created_at = date('Y-m-d H:i:s');
-		$post->author_id = Yii::$app->user->getId();
 		$post->show = ($this->show) ? 't' : 'f';
 
 		if (!$categoryDB = Category::findOne($this->categoryId)) {

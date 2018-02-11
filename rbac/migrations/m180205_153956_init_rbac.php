@@ -70,10 +70,10 @@ class m180205_153956_init_rbac extends Migration
             $auth->add($perm);
         }
 
-        $auth->addChild($permissions['updatePost'], $permissions['updateOwnPost']);
-        $auth->addChild($permissions['deletePost'], $permissions['deleteOwnPost']);
-        $auth->addChild($permissions['updateUser'], $permissions['updateOwnUser']);
-        $auth->addChild($permissions['deleteUser'], $permissions['deleteOwnUser']);
+        $auth->addChild($permissions['updateOwnPost'], $permissions['updatePost']);
+        $auth->addChild($permissions['deleteOwnPost'], $permissions['deletePost']);
+        $auth->addChild($permissions['updateOwnUser'], $permissions['updateUser']);
+        $auth->addChild($permissions['deleteOwnUser'], $permissions['deleteUser']);
 
         // Roles
         $registrateUser = $auth->createRole('registrateUser');
@@ -108,7 +108,6 @@ class m180205_153956_init_rbac extends Migration
 
         // Give admin permissions for admin with id=1
         $auth->assign($admin, 1);
-        $auth->assign($writer, 3);
     }
 
     /**

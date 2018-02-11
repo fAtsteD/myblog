@@ -88,21 +88,20 @@ else : ?>
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
-                <?= Yii::$app->user->identity->username ?>
-                <span class="caret"></span>
-                </a>
+				<?= Yii::$app->user->identity->username ?>
+				<span class="caret"></span>
+				</a>
 				<?php 
 				if (Yii::$app->user->can('createPost')) {
 					$itemsDropDown = [['label' => 'Создать статью', 'url' => Url::toRoute('article/create-post')]];
 				}
-				$itemsDropDown = [
-					['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id' => Yii::$app->user->getId()])],
-					'<li>'
+				$itemsDropDown[] = ['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id' => Yii::$app->user->getId()])];
+				$itemsDropDown[] = 	'<li>'
 						. Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
 						. Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])
 						. Html::endForm()
-						. '</li>',
-				];
+						. '</li>';
+				
 				?>
                 <?= Dropdown::widget([
 					'items' => $itemsDropDown,

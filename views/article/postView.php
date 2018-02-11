@@ -6,6 +6,7 @@
 use yii\bootstrap\Html;
 use yii\helpers\Url;
 use yii\helpers\HtmlPurifier;
+use app\models\Post;
 
 $this->title = Html::encode($model->title);
 $tags = '';
@@ -24,7 +25,7 @@ $tags = substr($tags, 0, -2);
 					<span class="glyphicon glyphicon-pencil"></span> <?= $model->author->username; ?>
 				</a>
 				<?php
-			if (Yii::$app->user->getId() === $model->author->id) {
+			if (Yii::$app->user->can('updatePost', ['post' => Post::findOne(Yii::$app->request->get('id'))])) {
 				echo '<a class="btn btn-sm btn-default" href="'
 					. Url::toRoute(['article/edit-post', 'id' => $model->id])
 					. '">Редактировать</a>';

@@ -31,6 +31,7 @@ class SiteController extends Controller
                 'only' => [
                     'logout',
                     'delete-user',
+                    'update-profile',
                 ],
                 'rules' => [
                     [
@@ -43,10 +44,17 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['deleteUser'],
                         'roleParams' => [
-                            'userId' => Users::findOne(['id' => Yii::$app->user->getId()]),
+                            'userId' => Users::findOne(Yii::$app->user->getId()),
                         ]
                     ],
-
+                    [
+                        'actions' => ['update-profile'],
+                        'allow' => true,
+                        'roles' => ['updateUser'],
+                        'roleParams' => [
+                            'userId' => Users::findOne(Yii::$app->user->getId()),
+                        ]
+                    ],
                 ],
             ],
             'verbs' => [
@@ -182,7 +190,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Watching profile and edit, if you have permission.
+     * Watching profile.
      *
      * @param int $id
      * @return Response|string
@@ -194,11 +202,29 @@ class SiteController extends Controller
             throw new NotFoundHttpException('Такого пользователя не существует.');
         }
 
-        if ($model->load(Yii::$app->request->post()) && $user = $model->changeData($id)) {
-            return $this->refresh();
+        return $this->render('profile', [
+            'model' => $model
+        ]);
+    }
+
+    /**
+     * Edit profile data.
+     *
+     * @param int $id
+     * @return Response|string
+     */
+    public function actionUpdateProfile($id)
+    {
+        $model = new ViewAndUpdateForm();
+        if (!$model->getInfo($id)) {
+            throw new NotFoundHttpException('Такого пользователя не существует.');
         }
 
-        return $this->render('profile', [
+        if ($model->load(Yii::$app->request->post()) && $user = $model->changeData($id)) {
+            return $this->redirect(['site/profile', 'id' => $id]);
+        }
+
+        return $this->render('updateProfile', [
             'model' => $model
         ]);
     }

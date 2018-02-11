@@ -5,6 +5,9 @@ use app\models\Users;
 
 class LoginFormCest
 {
+    private $username = 'admin-test';
+    private $password = 'admin921';
+
     public function _fixtures()
     {
         return [
@@ -17,12 +20,13 @@ class LoginFormCest
 
     public function _before(\FunctionalTester $I)
     {
-        $I->amOnRoute('site/login');
+        $I->amOnRoute('/');
+        $I->click('Войти');
     }
 
     public function openLoginPage(\FunctionalTester $I)
     {
-        $I->see('Войти', 'h1');
+        $I->see('Войти');
     }
 
     // demonstrates `amLoggedInAs` method
@@ -30,15 +34,15 @@ class LoginFormCest
     {
         $I->amLoggedInAs(1);
         $I->amOnPage('/');
-        $I->see('admin-test');
+        $I->see($this->username);
     }
 
     // demonstrates `amLoggedInAs` method
     public function internalLoginByInstance(\FunctionalTester $I)
     {
-        $I->amLoggedInAs(Users::findByUsername('admin-test'));
+        $I->amLoggedInAs(Users::findByUsername($this->username));
         $I->amOnPage('/');
-        $I->see('admin-test');
+        $I->see($this->username);
     }
 
     public function loginWithEmptyCredentials(\FunctionalTester $I)
@@ -52,7 +56,7 @@ class LoginFormCest
     public function loginWithWrongCredentials(\FunctionalTester $I)
     {
         $I->submitForm('#login-form', [
-            'LoginForm[username]' => 'admin',
+            'LoginForm[username]' => 'wrong-admin',
             'LoginForm[password]' => 'wrong',
         ]);
         $I->expectTo('see validations errors');
@@ -62,10 +66,10 @@ class LoginFormCest
     public function loginSuccessfully(\FunctionalTester $I)
     {
         $I->submitForm('#login-form', [
-            'LoginForm[username]' => 'admin-test',
-            'LoginForm[password]' => 'admin921',
+            'LoginForm[username]' => $this->username,
+            'LoginForm[password]' => $this->password,
         ]);
-        $I->see('admin-test');
+        $I->see($this->username);
         $I->dontSeeElement('form#login-form');
     }
 }
