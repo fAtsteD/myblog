@@ -95,13 +95,15 @@ else : ?>
 				if (Yii::$app->user->can('createPost')) {
 					$itemsDropDown = [['label' => 'Создать статью', 'url' => Url::toRoute('article/create-post')]];
 				}
+				if (Yii::$app->user->can('admin')) {
+					$itemsDropDown[] = ['label' => 'Админка', 'url' => Url::toRoute('admin/')];
+				}
 				$itemsDropDown[] = ['label' => 'Профиль', 'url' => Url::toRoute(['site/profile', 'id' => Yii::$app->user->getId()])];
 				$itemsDropDown[] = 	'<li>'
 						. Html::a('Выйти', '#', ['onclick' => "document.getElementById('logout').submit(); return false;"])
 						. Html::beginForm(['/site/logout'], 'post', ['id' => 'logout'])
 						. Html::endForm()
 						. '</li>';
-				
 				?>
                 <?= Dropdown::widget([
 					'items' => $itemsDropDown,

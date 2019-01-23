@@ -35,7 +35,7 @@ $this->title = 'Редактирование профиля';
 		<?php ActiveForm::end(); ?>
 
 					<?php Modal::begin([
-					'header' => '<h4>Удаление аккаунта</h4>',
+					'header' => '<h3>Удаление аккаунта</h3>',
 					'headerOptions' => [
 						'class' => 'text-left',
 					],
@@ -43,15 +43,12 @@ $this->title = 'Редактирование профиля';
 						'label' => 'Удалить аккаунт',
 						'class' => 'btn btn-danger',
 					],
+					'footer' => Html::beginForm(['/site/delete-user'], 'post', ['id' => 'delete-user'])
+						. Html::submitInput('Подтвердить', ['class' => 'btn btn-primary', 'name' => 'delete-accept-button'])
+						. Html::button('Отмена', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+						. Html::endForm(),
 				]); ?>
 						<p class="text-left">Вы уверены что хотите удалить аккаунт?</p>
-						<?= Html::beginForm(['/site/delete-user'], 'post', ['id' => 'delete-user']); ?>
-						<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-						<?= Html::submitInput('Подтвердить', ['class' => 'btn btn-primary', 'name' => 'delete-accept-button']); ?>
-						</div>
-						<?= Html::endForm(); ?>
-						
 					<?php Modal::end(); ?>
 				</div>
 			</div>
