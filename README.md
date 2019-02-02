@@ -1,6 +1,6 @@
 # Blog
 
-The site for blog created using framework Yii2 for myself.
+The site for blog created using framework Yii2 for myself. The app uses MySQL databases through ActiveRecord classes.
 
 The app uses frameworks:
 * Yii2
